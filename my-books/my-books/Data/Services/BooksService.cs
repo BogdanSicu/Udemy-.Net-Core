@@ -15,6 +15,16 @@ namespace my_books.Data.Services
             _context = context;
         }
 
+        public List<Book> GetAllBooks()
+        {
+            return _context.Books.ToList();
+        }
+
+        public Book GetBooksById (int id)
+        {
+            return _context.Books.FirstOrDefault(book => book.Id == id);
+        }
+
         public void AddBook(BookViewModel book)
         {
             var _book = new Book()
@@ -31,16 +41,6 @@ namespace my_books.Data.Services
             };
             _context.Books.Add(_book);
             _context.SaveChanges();
-        }
-
-        public List<Book> GetAllBooks()
-        {
-            return _context.Books.ToList();
-        }
-
-        public Book GetBooksById (int id)
-        {
-            return _context.Books.FirstOrDefault(book => book.Id == id);
         }
 
         public Book UpdateBookById(int id, BookViewModel bookViewModel)
@@ -61,6 +61,16 @@ namespace my_books.Data.Services
             }
 
             return _book;
+        }
+
+        public void DeleteBookById(int id)
+        {
+            var _book = _context.Books.FirstOrDefault(book => book.Id == id);
+            if(_book != null)
+            {
+                _context.Books.Remove(_book);
+                _context.SaveChanges();
+            }
         }
     }
 }
