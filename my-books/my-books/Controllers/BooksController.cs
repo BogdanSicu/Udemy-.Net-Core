@@ -48,7 +48,7 @@ namespace my_books.Controllers
         public IActionResult DeleteBookById(int id)
         {
             _booksService.DeleteBookById(id);
-            return Ok();
+            return Ok(); 
         }
     }
 }
