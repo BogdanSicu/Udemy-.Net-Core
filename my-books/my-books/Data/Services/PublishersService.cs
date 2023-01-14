@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using my_books.Data.Models;
 using my_books.Data.ViewModels;
+using System;
 using System.Linq;
 
 namespace my_books.Data.Services
@@ -39,6 +40,16 @@ namespace my_books.Data.Services
                 }).FirstOrDefault();
 
             return _publisherData;
+        }
+
+        public void DeletePublisherById(int id)
+        {
+            var _publisher = _context.Publishers.FirstOrDefault(obj => obj.Id == id);
+            if(_publisher != null )
+            {
+                _context.Publishers.Remove(_publisher);
+                _context.SaveChanges();
+            }
         }
     }
 }
