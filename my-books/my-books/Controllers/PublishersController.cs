@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using my_books.Data.Exceptions;
 using my_books.Data.Services;
 using my_books.Data.ViewModels;
 using System;
@@ -39,7 +40,18 @@ namespace my_books.Controllers
         [HttpPost("add-publisher")]
         public IActionResult AddPublisher([FromBody] PublisherViewModel publisher)
         {
-            return Created(nameof(AddPublisher), _publishersService.AddPublisher(publisher));
+            try
+            {
+                return Created(nameof(AddPublisher), _publishersService.AddPublisher(publisher));
+            } 
+            catch(PublisherNameException ex)
+            {
+                return BadRequest($"{ex.Message}, Publisher name: {ex.PublisherName}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("delete-publisher-by-id/{id}")]
@@ -47,9 +59,6 @@ namespace my_books.Controllers
         {
             try
             {
-                int x1 = 1, x2 = 0;
-                int result = x1 / x2;
-
                 _publishersService.DeletePublisherById(id);
                 return Ok();
             } 
