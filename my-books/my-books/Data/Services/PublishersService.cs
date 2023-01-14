@@ -15,7 +15,7 @@ namespace my_books.Data.Services
             _context = context;
         }
 
-        public void AddPublisher(PublisherViewModel publisherVM)
+        public Publisher AddPublisher(PublisherViewModel publisherVM)
         {
             var _publisher = new Publisher()
             {
@@ -24,6 +24,13 @@ namespace my_books.Data.Services
 
             _context.Publishers.Add(_publisher);
             _context.SaveChanges();
+
+            return _publisher;
+        }
+
+        public Publisher GetPublisherById(int id)
+        {
+            return _context.Publishers.FirstOrDefault(n => n.Id == id);
         }
 
         public PublisherWithBooksAndAuthorsViewModel GetPublisherData(int publisherId)

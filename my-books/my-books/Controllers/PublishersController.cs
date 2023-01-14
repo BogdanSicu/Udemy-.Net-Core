@@ -22,11 +22,23 @@ namespace my_books.Controllers
             return Ok(_publishersService.GetPublisherData(id));
         }
 
+        [HttpGet("get-publisher-by-id/{id}")]
+        public IActionResult GetPublisherById(int id)
+        {
+            var _response = _publishersService.GetPublisherById(id);
+
+            if(_response != null)
+            {
+                return Ok(_response);
+            }
+
+            return NotFound();
+        }
+
         [HttpPost("add-publisher")]
         public IActionResult AddPublisher([FromBody] PublisherViewModel publisher)
         {
-            _publishersService.AddPublisher(publisher);
-            return Ok();
+            return Created(nameof(AddPublisher), _publishersService.AddPublisher(publisher));
         }
 
         [HttpDelete("delete-publisher-by-id/{id}")]
