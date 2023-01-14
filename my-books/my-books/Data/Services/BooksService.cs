@@ -25,7 +25,7 @@ namespace my_books.Data.Services
             return _context.Books.FirstOrDefault(book => book.Id == id);
         }
 
-        public void AddBook(BookViewModel book)
+        public void AddBookWithAuthors(BookViewModel book)
         {
             var _book = new Book()
             {
@@ -35,12 +35,23 @@ namespace my_books.Data.Services
                 DateRead = book.IsRead ? book.DateRead.Value : null,
                 Rate = book.IsRead ? book.Rate.Value : null,
                 Genre = book.Genre,
-                Author = book.Author,
                 CoverUrl = book.CoverUrl,
-                DateAdded = DateTime.Now
+                DateAdded = DateTime.Now,
+                PublisherId = book.PublisherId,
             };
             _context.Books.Add(_book);
             _context.SaveChanges();
+
+            foreach(var id in book.AuthorsIds)
+            {
+                var _book_author = new Book_Author()
+                {
+                    BookId = _book.Id,
+                    AuthorId = id
+                };
+                _context.Books_Authors.Add(_book_author);
+                _context.SaveChanges();
+            }
         }
 
         public Book UpdateBookById(int id, BookViewModel bookViewModel)
@@ -54,7 +65,6 @@ namespace my_books.Data.Services
                 _book.DateRead = bookViewModel.IsRead ? bookViewModel.DateRead.Value : null;
                 _book.Rate = bookViewModel.IsRead ? bookViewModel.Rate.Value : null;
                 _book.Genre = bookViewModel.Genre;
-                _book.Author = bookViewModel.Author;
                 _book.CoverUrl = bookViewModel.CoverUrl;
 
                 _context.SaveChanges();
