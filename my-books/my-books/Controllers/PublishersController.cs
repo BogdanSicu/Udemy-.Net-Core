@@ -27,7 +27,7 @@ namespace my_books.Controllers
         [HttpGet("get-publisher-by-id/{id}")]
         public IActionResult GetPublisherById(int id)
         {
-            throw new Exception("this is an exception test for middleware");
+            //throw new Exception("this is an exception test for middleware");
 
             var _response = _publishersService.GetPublisherById(id);
 
