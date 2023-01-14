@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using my_books.Data.Services;
 using my_books.Data.ViewModels;
+using System;
 
 namespace my_books.Controllers
 {
@@ -44,8 +45,19 @@ namespace my_books.Controllers
         [HttpDelete("delete-publisher-by-id/{id}")]
         public IActionResult DeletePublisherById(int id)
         {
-            _publishersService.DeletePublisherById(id);
-            return Ok();
+            try
+            {
+                int x1 = 1, x2 = 0;
+                int result = x1 / x2;
+
+                _publishersService.DeletePublisherById(id);
+                return Ok();
+            } 
+            catch(Exception ex)
+            {
+                //return BadRequest("Custom Message");
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
