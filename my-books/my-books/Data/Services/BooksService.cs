@@ -1,4 +1,5 @@
-﻿using my_books.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using my_books.Data.Models;
 using my_books.Data.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -20,9 +21,22 @@ namespace my_books.Data.Services
             return _context.Books.ToList();
         }
 
-        public Book GetBooksById (int id)
+        public BookWithAuthorsViewModel GetBooksById (int bookId)
         {
-            return _context.Books.FirstOrDefault(book => book.Id == id);
+            var _bookWithAuthors = _context.Books.Where(obj => obj.Id == bookId).Select(myBook => new BookWithAuthorsViewModel()
+            {
+                Title = myBook.Title,
+                Description = myBook.Description,
+                IsRead = myBook.IsRead,
+                DateRead = myBook.IsRead ? myBook.DateRead.Value : null,
+                Rate = myBook.IsRead ? myBook.Rate.Value : null,
+                Genre = myBook.Genre,
+                CoverUrl = myBook.CoverUrl,
+                PublisherName = myBook.Publisher.Name,
+                AuthorsNames = myBook.Books_Authors.Select(obj => obj.Author.FullName).ToList()
+            }).FirstOrDefault();
+
+            return _bookWithAuthors;
         }
 
         public void AddBookWithAuthors(BookViewModel book)
