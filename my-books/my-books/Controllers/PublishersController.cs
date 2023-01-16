@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using my_books.ActionResults;
 using my_books.Data.Exceptions;
+using my_books.Data.Models;
 using my_books.Data.Services;
 using my_books.Data.ViewModels;
 using System;
@@ -24,20 +26,67 @@ namespace my_books.Controllers
             return Ok(_publishersService.GetPublisherData(id));
         }
 
+        //[HttpGet("get-publisher-by-id/{id}")]
+        //public Publisher GetPublisherById(int id)
+        //{
+        //    //throw new Exception("this is an exception test for middleware");
+
+        //    var _response = _publishersService.GetPublisherById(id);
+
+        //    if(_response != null)
+        //    {
+        //        //return Ok(_response);
+        //        return _response;
+        //    }
+
+        //    //return NotFound();
+        //    return null;
+        //}
+
+        //[HttpGet("get-publisher-by-id/{id}")]
+        //public ActionResult<Publisher> GetPublisherById(int id)
+        //{
+        //    //throw new Exception("this is an exception test for middleware");
+
+        //    var _response = _publishersService.GetPublisherById(id);
+
+        //    if (_response != null)
+        //    {
+        //        //return Ok(_response);
+        //        return _response;
+        //    }
+
+        //    return NotFound();
+        //}
+
         [HttpGet("get-publisher-by-id/{id}")]
-        public IActionResult GetPublisherById(int id)
+        public CustomActionResult GetPublisherById(int id)
         {
             //throw new Exception("this is an exception test for middleware");
 
             var _response = _publishersService.GetPublisherById(id);
 
-            if(_response != null)
+            if (_response != null)
             {
-                return Ok(_response);
-            }
+                //return Ok(_response);
+                var _responseObj = new CustomActionResultViewModel()
+                {
+                    Publisher = _response
+                };
 
-            return NotFound();
+                return new CustomActionResult(_responseObj);
+            }
+            else
+            {
+                var _responseObj = new CustomActionResultViewModel()
+                {
+                    Exception = new Exception("This is coming from publishers controller")
+                };
+
+                return new CustomActionResult(_responseObj);
+            }
         }
+
 
         [HttpPost("add-publisher")]
         public IActionResult AddPublisher([FromBody] PublisherViewModel publisher)
