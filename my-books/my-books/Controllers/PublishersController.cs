@@ -20,6 +20,20 @@ namespace my_books.Controllers
             _publishersService = publishersService; 
         }
 
+        [HttpGet("get-all-publishers")]
+        public IActionResult GetAllPublishers(string sortBy, string searchString) 
+        {
+            try
+            {
+                var _result = _publishersService.GetAllPublishers(sortBy, searchString);
+                return Ok(_result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Sorry, we could not load the publishers");
+            }
+        }
+
         [HttpGet("get-publisher-books-with-authors/{id}")]
         public IActionResult GetPublisherData(int id)
         {
@@ -44,7 +58,7 @@ namespace my_books.Controllers
         //}
 
         //[HttpGet("get-publisher-by-id/{id}")]
-        //public ActionResult<Publisher> GetPublisherById(int id)
+        //public CustomActionResult GetPublisherById(int id)
         //{
         //    //throw new Exception("this is an exception test for middleware");
 
@@ -53,14 +67,26 @@ namespace my_books.Controllers
         //    if (_response != null)
         //    {
         //        //return Ok(_response);
-        //        return _response;
-        //    }
+        //        var _responseObj = new CustomActionResultViewModel()
+        //        {
+        //            Publisher = _response
+        //        };
 
-        //    return NotFound();
+        //        return new CustomActionResult(_responseObj);
+        //    }
+        //    else
+        //    {
+        //        var _responseObj = new CustomActionResultViewModel()
+        //        {
+        //            Exception = new Exception("This is coming from publishers controller")
+        //        };
+
+        //        return new CustomActionResult(_responseObj);
+        //    }
         //}
 
         [HttpGet("get-publisher-by-id/{id}")]
-        public CustomActionResult GetPublisherById(int id)
+        public ActionResult<Publisher> GetPublisherById(int id)
         {
             //throw new Exception("this is an exception test for middleware");
 
@@ -69,23 +95,13 @@ namespace my_books.Controllers
             if (_response != null)
             {
                 //return Ok(_response);
-                var _responseObj = new CustomActionResultViewModel()
-                {
-                    Publisher = _response
-                };
-
-                return new CustomActionResult(_responseObj);
+                return _response;
             }
-            else
-            {
-                var _responseObj = new CustomActionResultViewModel()
-                {
-                    Exception = new Exception("This is coming from publishers controller")
-                };
 
-                return new CustomActionResult(_responseObj);
-            }
+            return NotFound();
         }
+
+ 
 
 
         [HttpPost("add-publisher")]

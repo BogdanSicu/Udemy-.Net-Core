@@ -3,6 +3,7 @@ using my_books.Data.Exceptions;
 using my_books.Data.Models;
 using my_books.Data.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -72,6 +73,49 @@ namespace my_books.Data.Services
         private bool StringStartsWithNumber(string name)
         {
             return Regex.IsMatch(name, @"^\d");
+        }
+
+        public List<Publisher> GetAllPublishers(string sortBy)
+        {
+            var allPublishers = _context.Publishers.OrderBy(n => n.Name).ToList();
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                switch (sortBy)
+                {
+                    case "name_desc":
+                        allPublishers = allPublishers.OrderByDescending(n => n.Name).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return allPublishers;
+        }
+
+        public List<Publisher> GetAllPublishers(string sortBy, string searchString)
+        {
+            var allPublishers = _context.Publishers.OrderBy(n => n.Name).ToList();
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                switch (sortBy)
+                {
+                    case "name_desc":
+                        allPublishers = allPublishers.OrderByDescending(n => n.Name).ToList(); 
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if(!string.IsNullOrEmpty(searchString))
+            {
+                allPublishers = allPublishers.Where(n => n.Name.Contains(searchString)).ToList();
+            }
+
+            return allPublishers;
         }
     }
 }
